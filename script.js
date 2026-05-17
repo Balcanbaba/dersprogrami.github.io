@@ -1,0 +1,145 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const scheduleBody = document.getElementById('schedule-body');
+    const clearBtn = document.getElementById('clear-btn');
+    
+    // 9 Ders Saati yapilandirmasi
+    const periods = 9;
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+    // Varsayılan (Örnek) Ders Programı
+    const defaultSchedule = {
+        "monday-1": "Matematik", "monday-2": "Matematik", "monday-3": "Fizik", "monday-4": "Fizik", "monday-5": "Kimya", 
+        "tuesday-1": "Edebiyat", "tuesday-2": "Edebiyat", "tuesday-3": "Tarih", "tuesday-4": "Biyoloji", "tuesday-5": "Biyoloji",
+        "wednesday-1": "İngilizce", "wednesday-2": "İngilizce", "wednesday-3": "Rehberlik", "wednesday-4": "Beden", "wednesday-5": "Beden",
+        "thursday-1": "Matematik", "thursday-2": "Matematik", "thursday-3": "Kimya", "thursday-4": "Coğrafya", "thursday-5": "Felsefe",
+        "friday-1": "Edebiyat", "friday-2": "Edebiyat", "friday-3": "Fizik", "friday-4": "Din K.", "friday-5": "Görsel S."
+    };
+
+    // LocalStorage verisini yukle
+    const loadScheduleData = () => {
+        const storedData = localStorage.getItem('classScheduleData');
+        return storedData ? JSON.parse(storedData) : {...defaultSchedule};
+    };
+
+    // LocalStorage verisini kaydet
+    const saveScheduleData = (data) => {
+        localStorage.setItem('classScheduleData', JSON.stringify(data));
+    };
+
+    let scheduleData = loadScheduleData();
+
+    // Tablo satirlarini olustur
+    for (let i = 1; i <= periods; i++) {
+        const tr = document.createElement('tr');
+        
+        // Ders saati hucresi
+        const th = document.createElement('th');
+        th.className = 'time-col';
+        th.textContent = `${i}. Ders`;
+        tr.appendChild(th);
+
+        // Gunler icin hucreler
+        days.forEach(day => {
+            const td = document.createElement('td');
+            const innerDiv = document.createElement('div');
+            
+            innerDiv.className = 'cell-content';
+            innerDiv.contentEditable = 'true';
+            innerDiv.dataset.day = day;
+            innerDiv.dataset.period = i;
+            innerDiv.setAttribute('placeholder', '+ Ekle');
+
+            // Kayitlari panele aktar
+            const cellKey = `${day}-${i}`;
+            if (scheduleData[cellKey]) {
+                innerDiv.textContent = scheduleData[cellKey];
+            }
+
+            // Metin degistiginde veya guncellendiginde kaydet
+            innerDiv.addEventListener('input', (e) => {
+                const text = e.target.textContent;
+                scheduleData[cellKey] = text;
+                saveScheduleData(scheduleData);
+            });
+            
+            // Satir ve sutun hover effect gorselligi eklenebilir
+            innerDiv.addEventListener('focus', () => {
+                td.classList.add('focused-cell');
+            });
+            innerDiv.addEventListener('blur', () => {
+                td.classList.remove('focused-cell');
+            });
+
+            td.appendChild(innerDiv);
+            tr.appendChild(td);
+        });
+
+        scheduleBody.appendChild(tr);
+    }
+
+    // Temizle Butonu
+    clearBtn.addEventListener('click', () => {
+        if (confirm('Tüm ders programını silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+            scheduleData = {};
+            localStorage.setItem('classScheduleData', JSON.stringify(scheduleData));
+            const allCells = document.querySelectorAll('.cell-content');
+            allCells.forEach(cell => {
+                cell.textContent = '';
+            });
+        }
+    });
+
+    const exportBtn = document.getElementById('export-btn');
+    const importBtn = document.getElementById('import-btn');
+    const importFile = document.getElementById('import-file');
+
+    // Dosyaya Kaydet (Export)
+    exportBtn.addEventListener('click', () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scheduleData));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "ders_programim.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    });
+
+    // Dosyadan Yükle (Import Trigger)
+    importBtn.addEventListener('click', () => {
+        importFile.click();
+    });
+
+    // Dosyadan Yükle (Import Logic)
+    importFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const importedData = JSON.parse(event.target.result);
+                scheduleData = importedData;
+                saveScheduleData(scheduleData);
+                
+                // Paneli Guncelle
+                const allCells = document.querySelectorAll('.cell-content');
+                allCells.forEach(cell => {
+                    const key = cell.dataset.day + '-' + cell.dataset.period;
+                    cell.textContent = scheduleData[key] || '';
+                });
+                alert('Ders programı başarıyla yüklendi!');
+            } catch (err) {
+                alert('Dosya okunurken bir hata oluştu. Geçerli bir JSON dosyası seçin.');
+            }
+        };
+        reader.readAsText(file);
+        e.target.value = ''; // Reset input
+    });
+
+    // Premium Animasyon: Hücreler yüklenirken gecikmeli "fade-in" efekti ekleyelim
+    const rows = scheduleBody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.style.animationDelay = `${index * 0.05}s`;
+        row.classList.add('fade-in-up');
+    });
+});

@@ -1,0 +1,281 @@
+/* CSS Variables for Premium Dark Theme */
+:root {
+    --bg-primary: #0f172a;      /* slate 900 */
+    --bg-secondary: #1e293b;    /* slate 800 */
+    --bg-tertiary: rgba(30, 41, 59, 0.7); /* slate 800 with opacity for glassmorphism */
+    --accent-primary: #38bdf8;  /* sky 400 */
+    --accent-secondary: #818cf8; /* indigo 400 */
+    --accent-gradient: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    --text-primary: #f8fafc;    /* slate 50 */
+    --text-secondary: #94a3b8;  /* slate 400 */
+    --danger: #ef4444;          /* red 500 */
+    --danger-hover: #dc2626;    /* red 600 */
+    --border-color: rgba(148, 163, 184, 0.1);
+    --hover-bg: rgba(56, 189, 248, 0.05); /* very light sky blue */
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.15) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: var(--accent-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
+
+.header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.primary-btn {
+    background-color: rgba(56, 189, 248, 0.1);
+    color: var(--accent-primary);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.primary-btn:hover {
+    background-color: var(--accent-primary);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+}
+
+.secondary-btn {
+    background-color: rgba(129, 140, 248, 0.1);
+    color: var(--accent-secondary);
+    border: 1px solid rgba(129, 140, 248, 0.3);
+}
+
+.secondary-btn:hover {
+    background-color: var(--accent-secondary);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.4);
+}
+
+.danger-btn {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.danger-btn:hover {
+    background-color: var(--danger);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+/* Search and Table Container */
+.schedule-wrapper {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 1.5rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow-x: auto; /* For small screens */
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+    text-align: left;
+}
+
+/* Headers */
+.schedule-table th {
+    padding: 1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border-color);
+    text-align: center;
+}
+
+.schedule-table th.time-col {
+    color: var(--accent-primary);
+    text-align: right;
+    width: 100px;
+}
+
+/* Cells */
+.schedule-table td {
+    padding: 0;
+    position: relative;
+}
+
+.cell-content {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    min-height: 70px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    cursor: text;
+    outline: none;
+    word-break: break-word;
+}
+
+/* Content Editable Placeholder Hack */
+.cell-content:empty::before {
+    content: attr(placeholder);
+    color: var(--text-secondary);
+    opacity: 0.5;
+    pointer-events: none;
+    font-size: 0.85rem;
+    font-weight: 300;
+}
+
+/* Hover & Focus States */
+.cell-content:hover {
+    background: var(--hover-bg);
+    border-color: rgba(56, 189, 248, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.1);
+}
+
+.cell-content:focus {
+    background: var(--hover-bg);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Focused cell removed as it was empty */
+
+/* Time numbers formatting */
+.schedule-table tbody th {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    padding-right: 1.5rem;
+    font-weight: 500;
+}
+
+/* FooterStyles */
+footer {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 1rem;
+    opacity: 0.6;
+}
+
+/* Basic Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    opacity: 0; 
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-primary); 
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3); 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.6); 
+}
+
+/* Responsive constraints */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    .cell-content {
+        min-width: 100px;
+        font-size: 0.85rem;
+    }
+}
